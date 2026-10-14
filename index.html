@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#08090a" />
+    <meta name="description" content="ANCA Mould Shop industrial digital twin cockpit" />
+    <title>ANCA MOULD SHOP // INDUSTRIAL DIGITAL TWIN</title>
+    <script type="module" crossorigin src="./assets/index-C3otYV_L.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CpBp03rv.css">
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="scene-canvas" aria-label="3D ANCA Mould Shop model"></canvas>
+
+      <header class="telemetry-header hud-panel">
+        <div class="brand-lockup">
+          <span class="brand-mark">ANCA<span>//</span></span>
+          <span class="brand-sub">MOULD SHOP</span>
+        </div>
+        <div class="facility-readout">
+          <div class="eyebrow">FACILITY ENVELOPE <span class="status-dot"></span> LIVE</div>
+          <div class="facility-dimensions">11.50M <b>×</b> 29.00M <b>×</b> 9.50M <span class="pipe">|</span> PU ISO 100MM <span class="pipe">|</span> OHC 10T @ 8.300M</div>
+        </div>
+        <div class="camera-strip" id="camera-strip">
+          <button class="camera-btn active" data-camera="iso">ISO</button>
+          <button class="camera-btn" data-camera="front">FRONT</button>
+          <button class="camera-btn" data-camera="side">SIDE</button>
+          <button class="camera-btn" data-camera="top">TOP / PLAN</button>
+          <button class="camera-btn" data-camera="inside">INSIDE</button>
+          <button class="camera-btn" data-camera="walkthrough">WALKTHROUGH</button>
+          <button class="icon-btn" id="fullscreen-btn" title="Fullscreen">⛶</button>
+        </div>
+      </header>
+
+      <aside class="control-deck hud-panel" id="control-deck">
+        <div class="panel-heading"><span>MASTER CONTROL DECK</span><small>SYS / 01</small></div>
+        <section class="control-section">
+          <div class="section-label">01 // CAMERA PRESETS</div>
+          <div class="compact-grid">
+            <button class="micro-btn" data-camera="iso">ISO</button><button class="micro-btn" data-camera="front">FRONT</button>
+            <button class="micro-btn" data-camera="side">SIDE</button><button class="micro-btn" data-camera="top">TOP</button>
+            <button class="micro-btn" data-camera="inside">INSIDE</button><button class="micro-btn" data-camera="walkthrough">WALK</button>
+          </div>
+        </section>
+        <section class="control-section">
+          <div class="section-label">02 // ENVELOPE CUTAWAY</div>
+          <label class="toggle-row"><span>PU ISO WALLS</span><input type="checkbox" data-toggle="walls" checked><i></i></label>
+          <label class="toggle-row"><span>ROOF / CEILING PANEL</span><input type="checkbox" data-toggle="roof" checked><i></i></label>
+          <label class="toggle-row"><span>STEEL SUPERSTRUCTURE</span><input type="checkbox" data-toggle="structure" checked><i></i></label>
+        </section>
+        <section class="control-section">
+          <div class="section-label">03 // PRODUCTION ZONES</div>
+          <div class="zone-list" id="zone-list">
+            <button class="zone-btn" data-zone="pourRoom"><span class="zone-swatch pour"></span>POUR ROOM <b>SPEC</b></button>
+            <button class="zone-btn" data-zone="sprayBooth"><span class="zone-swatch spray"></span>SPRAY BOOTH <b>SPEC</b></button>
+            <button class="zone-btn" data-zone="dryStore"><span class="zone-swatch dry"></span>DRY STORE <b>SPEC</b></button>
+            <button class="zone-btn" data-zone="mainShop"><span class="zone-swatch shop"></span>MAIN SHOP FLOOR <b>SPEC</b></button>
+          </div>
+        </section>
+        <section class="control-section">
+          <div class="section-label">04 // MACHINERY & HVAC</div>
+          <div class="toggle-grid">
+            <label class="toggle-row"><span>MIXER + BIG BAG</span><input type="checkbox" data-toggle="mixer" checked><i></i></label>
+            <label class="toggle-row"><span>10T CRANE</span><input type="checkbox" data-toggle="crane" checked><i></i></label>
+            <label class="toggle-row"><span>DUCT / CYCLONE</span><input type="checkbox" data-toggle="ducts" checked><i></i></label>
+            <label class="toggle-row"><span>HVAC / DEHUMID.</span><input type="checkbox" data-toggle="hvac" checked><i></i></label>
+            <label class="toggle-row"><span>ROLLER DOORS</span><input type="checkbox" data-toggle="doors" checked><i></i></label>
+            <label class="toggle-row"><span>THERMAL AIRFLOW</span><input type="checkbox" data-toggle="thermal" checked><i></i></label>
+          </div>
+        </section>
+        <section class="control-section actuator-section">
+          <div class="section-label">05 // KINETICS & ACTUATORS</div>
+          <div class="slider-row"><span>CRANE Z / RUNWAY 19M</span><output id="crane-z-value">-0.8M / 46%</output></div><input class="range" id="crane-z" type="range" min="0" max="100" value="46">
+          <div class="slider-row"><span>TROLLEY X / SPAN 10.7M</span><output id="trolley-x-value">0.0M / 50%</output></div><input class="range" id="trolley-x" type="range" min="0" max="100" value="50">
+          <div class="slider-row"><span>HOIST Z / OVERHEAD LIFT</span><output id="hoist-z-value">4.4M EL / 60%</output></div><input class="range" id="hoist-z" type="range" min="0" max="100" value="60">
+          <div class="slider-row"><span>DOOR OPEN / THERMAL ΔT</span><output id="door-value">0%</output></div><input class="range" id="door-position" type="range" min="0" max="100" value="0">
+          <div class="thermal-legend"><span><i class="cold-dot"></i> CLOSED / COOL FIELD</span><span><i class="hot-dot"></i> OPEN / HOT IN</span></div>
+          <button class="action-btn thermal-demo-btn" id="airflow-demo"><span>≈</span> AIRFLOW DEMO <small>DOOR / HOT ↔ COLD</small></button>
+          <div class="slider-row"><span>CLIPPING Y</span><output id="clip-value">100%</output></div><input class="range" id="clip-y" type="range" min="0" max="100" value="100">
+          <button class="action-btn" id="auto-crane"><span>▶</span> AUTO CRANE <small>RUN SEQUENCE</small></button>
+        </section>
+        <section class="control-section">
+          <div class="section-label">06 // DIAGNOSTICS & CAD TOOLS</div>
+          <div class="diag-grid"><button class="diag-btn" id="measure-btn">⌖ MEASURE</button><button class="diag-btn" id="wireframe-btn">▧ WIREFRAME</button><button class="diag-btn" id="night-btn">◐ NIGHT LUX</button><button class="diag-btn" id="export-btn">⇩ EXPORT 4K</button></div>
+        </section>
+        <section class="control-section cfd-section">
+          <div class="section-label">07 // TRANSIENT CFD SCENARIOS</div>
+          <div class="diag-grid"><button class="diag-btn cfd-case active" data-cfd="C01">C01 BASE</button><button class="diag-btn cfd-case" data-cfd="C03">C03 DRY LOAD</button><button class="diag-btn cfd-case" data-cfd="C07">C07 D02+D03</button><button class="diag-btn cfd-case" data-cfd="C17">C17 PSD / VOC</button></div>
+          <div class="slider-row"><span>LOAD MASS / 30 MIN</span><output id="load-mass-value">2,300 KG</output></div><input class="range" id="load-mass" type="range" min="2000" max="2300" step="100" value="2300">
+        </section>
+        <div class="deck-footer"><span>REV. 3 / A-01—A-06</span><span>AUTH / CAD-SYNC</span></div>
+      </aside>
+
+      <aside class="inspector hud-panel" id="inspector">
+        <div class="panel-heading"><span>ZONE INSPECTION</span><small id="inspector-code">Z-000</small></div>
+        <div class="inspector-status"><span class="status-dot"></span><span id="inspection-status">SELECT A ZONE</span><span class="live-pulse">LIVE</span></div>
+        <div class="zone-title-row"><div><div class="eyebrow">ENGINEERING MODULE</div><h1 id="zone-name">MAIN SHOP FLOOR</h1></div><div class="zone-index" id="zone-index">04</div></div>
+        <div class="data-grid">
+          <div><span>ENVELOPE</span><strong id="zone-dim">11.50M × 12.10M × 9.50M</strong></div>
+          <div><span>AIR VOLUME</span><strong id="zone-volume">2,199 M³</strong></div>
+          <div><span>CFD DESIGN FLOW</span><strong id="zone-cfd">18,600 M³/H</strong></div>
+          <div><span>FLOOR / STATUS</span><strong id="zone-floor">EPOXY / NOMINAL</strong></div>
+        </div>
+        <div class="cfd-block">
+          <div class="cfd-heading"><span>TRANSIENT CFD // TARGET STATE</span><b id="cfd-case-readout">C01</b></div>
+          <div class="cfd-grid"><div><span>T / RH</span><strong id="cfd-trh">25°C / 50%</strong></div><div><span>W</span><strong id="cfd-w">9.92 G/KG</strong></div><div><span>SUPPLY</span><strong id="cfd-supply">6,500 M³/H</strong></div><div><span>EXHAUST</span><strong id="cfd-exhaust">2,000 M³/H</strong></div></div>
+          <div class="cfd-source" id="cfd-source">Dehumicool return loop separated from filtered exhaust / split AC excluded.</div>
+          <div class="cfd-doorline">D01 4×5M · D02 4×4.5M · D03/D04 4×3.2M · D05-A/B 2.1×6.3M</div>
+        </div>
+        <div class="inspector-copy" id="zone-desc">Select a production zone or click its highlighted volume in the model to pull engineering data, equipment notes and the focus camera target.</div>
+        <div class="feature-list" id="feature-list"></div>
+        <button class="focus-btn" id="focus-zone">FOCUS CAMERA ON ZONE <span>↗</span></button>
+        <div class="inspector-divider"></div>
+        <div class="selection-readout"><span>PICK BUFFER</span><strong id="selection-readout">READY / NO HIT</strong></div>
+        <div class="cursor-crosshair large"></div>
+      </aside>
+
+      <section class="radar hud-panel" aria-label="Tactical radar mini-map">
+        <div class="radar-heading"><span>TACTICAL RADAR // PLAN</span><span id="radar-state">TRACKING</span></div>
+        <canvas id="radar-canvas" width="280" height="170"></canvas>
+        <div class="radar-legend"><span><i class="legend-camera"></i> CAM</span><span><i class="legend-crane"></i> OHC 10T</span><span><i class="legend-zone"></i> ZONE</span></div>
+      </section>
+
+      <div class="bottom-readout">
+        <span><b id="system-mode">ORBIT / ENGINEERING VIEW</b></span><span>FPS <b id="fps-readout">60</b></span><span>CAM <b id="cam-readout">ISO</b></span><span>DRAG ORBIT · WHEEL ZOOM · SHIFT PAN</span><span>GRID <b>1M</b></span><span>SNAP <b>ON</b></span>
+      </div>
+      <div class="toast" id="toast" role="status"></div>
+      <div class="walkthrough-hint" id="walkthrough-hint"><span>W A S D</span> MOVE &nbsp; / &nbsp; CLICK CANVAS TO CAPTURE MOUSE &nbsp; / &nbsp; ESC RELEASE</div>
+      <div class="loading-screen" id="loading-screen"><div class="loading-mark">ANCA<span>//</span></div><div class="loading-bar"><i></i></div><p>LOADING FACILITY GEOMETRY / REV. 3</p></div>
+    </div>
+  </body>
+</html>
